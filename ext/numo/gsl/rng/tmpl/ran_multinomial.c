@@ -8,7 +8,7 @@
 
  */
 static VALUE
-<%=c_func(1)%>(VALUE self, VALUE vN, VALUE vp)
+<%=c_func(2)%>(VALUE self, VALUE vN, VALUE vp)
 {
     VALUE vn;
     double *p;
