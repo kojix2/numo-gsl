@@ -1,0 +1,31 @@
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    name: ${{ matrix.os }} Ruby ${{ matrix.ruby }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu", "macos"]
+        ruby: ["3.3"]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Install gsl (macos)
+        if: ${{ matrix.os == 'macos' }}
+        run: |
+          brew install gsl
+      - name: Install libdeflate & libcurl4 (ubuntu)
+        if: ${{ matrix.os == 'ubuntu' }}
+        run: |
+          sudo apt update -y
+          sudo apt install -yq libgsl-dev
+      - name: Build and test with Rake
+        run: |
+          rake install
